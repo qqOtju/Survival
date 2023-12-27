@@ -21,10 +21,10 @@ namespace Project_Assets.Scripts.Infrastructure.Startup
         private async void Awake()
         {
             var loadingOperations = new Queue<ILoading>();
-            loadingOperations.Enqueue(new SceneLoading(_menuScene, LoadSceneMode.Additive));
+            loadingOperations.Enqueue(new FakeLoadingOperation());
             await Load(loadingOperations);
             OnLoaded?.Invoke();
-            Destroy(gameObject);
+            LoadMainMenuScene();
         }
 
         private async Task Load(Queue<ILoading> loadingOperations)
@@ -32,6 +32,12 @@ namespace Project_Assets.Scripts.Infrastructure.Startup
             var loadingScreen = Instantiate(_loading);
             await loadingScreen.Load(loadingOperations);
             Destroy(loadingScreen.gameObject);
+        }
+
+        private void LoadMainMenuScene()
+        {
+            SceneManager.LoadSceneAsync(_menuScene, LoadSceneMode.Additive);
+            Destroy(gameObject);
         }
     }
 }
